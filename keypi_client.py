@@ -88,7 +88,7 @@ class Kbrd:
         self.update_keys(keymap.convert("KEY_SPACE"), 0)
         self.send_keys()
 
-   def meta_ctrl_q(self):
+    def meta_ctrl_q(self):
         self.update_mod_keys(keymap.modkey("KEY_LEFTMETA"), 1)
         self.update_mod_keys(keymap.modkey("KEY_LEFTCTRL"), 1)
         self.update_keys(keymap.convert("KEY_Q"), 1)

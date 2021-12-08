@@ -22,12 +22,9 @@ Check that the packages required for this are installed
 ```
 sudo apt-get install python3-dbus
 ```
-
-Here is an outline of things I changed:
-## Moved to Python3
-I wanted to do this because not only is it a good thing to do but it also allowed some of the dependancies to be removed. After Python 3.3 Bluetooth sockets are supported in the native Python installs. The downside to this is that there are clear distinctions between str and bytes in the code. For me, this broke the keyboard client. This is what required the biggest re-write to get Python3 working.
-
 ## Reconfigure the Bluetooth Daemon
+TODO: update this
+
 The instructions worked that were provided but things have moved on a little bit. To stop the Bluetooth daemon running then the following command is preferred:
 ```
 sudo service bluetooth stop
@@ -50,7 +47,7 @@ ExecStart=/usr/lib/bluetooth/bluetoothd -P input
 ## Configure D-Bus
 When a new service is created on the D-Bus, this service needs to be configured.
 ```
-sudo cp com.jonkeane.btkkbservice.conf /etc/dbus-1/system.d
+sudo cp com.jonkeane.keypiservice.conf /etc/dbus-1/system.d
 ```
 
 ## Pairing
