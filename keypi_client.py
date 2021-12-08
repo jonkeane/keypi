@@ -1,5 +1,6 @@
 import dbus
 import keymap
+import argparse
 from time import sleep
 
 HID_DBUS = 'com.jonkeane.keypiservice'
