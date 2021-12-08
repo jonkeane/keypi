@@ -107,9 +107,9 @@ if __name__ == '__main__':
 
     kb = Kbrd()
 
-    if args.echo == "open":
+    if args.command == "open":
         kb.space_space()
-    elif args.echo == "close":
+    elif args.command == "close":
         kb.meta_ctrl_q()
     else:
         kb.custom_input()
