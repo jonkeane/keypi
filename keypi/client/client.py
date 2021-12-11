@@ -65,6 +65,7 @@ class Kbrd:
     def custom_input(self):
         """
         Take custom input, and send it
+        TODO: handle update mod keys correctly
         """
         val = input("Enter your value: ")
         print('blasting...')
@@ -83,7 +84,7 @@ class Kbrd:
                 self.update_keys(keymap.convert(char), 0)
                 self.send_keys()
 
-    def space_space(self, sleep_time = 0.5):
+    def space_space(self, sleep_time = 0.75):
         self.update_keys(keymap.convert("KEY_SPACE"), 1)
         self.send_keys()
         self.update_keys(keymap.convert("KEY_SPACE"), 0)

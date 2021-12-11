@@ -1,0 +1,15 @@
+[Unit]
+Description=KeyPi server
+ConditionPathIsDirectory=/sys/class/bluetooth
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/home/pi/.local/bin/keypi server start
+StandardOutput=file:/var/log/keypi_out.log
+StandardError=file:/var/log/keypi_error.log
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
