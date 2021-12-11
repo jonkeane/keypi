@@ -69,7 +69,7 @@ class Kbrd:
         """
         val = input("Enter your value: ")
         print('blasting...')
-        for char in string_to_keys(val):
+        for char in keymap.string_to_keys(val):
             self.update_keys(char, 1)
             self.send_keys()
             self.update_keys(char, 0)

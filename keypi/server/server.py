@@ -112,7 +112,7 @@ class BTKbDevice:
         self.discoverabletimeout = 0
         self.discoverable = True
 
-    def interfaces_added(self):
+    def interfaces_added(*args, **kwargs):
         pass
 
     def _properties_changed(self, interface, changed, invalidated, path):
