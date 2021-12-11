@@ -65,15 +65,25 @@ class Kbrd:
     def custom_input(self):
         """
         Take custom input, and send it
-        # TODO: need to deal with chords, etc
         """
         val = input("Enter your value: ")
         print('blasting...')
         for char in keymap.string_to_keys(val):
-            self.update_keys(char, 1)
-            self.send_keys()
-            self.update_keys(char, 0)
-            self.send_keys()
+            if isinstance(char, list):
+                # this is a chord, so send all of those at once
+                for sub_char in char:
+                    self.update_keys(keymap.convert(char), 1)
+                self.send_keys()
+                for sub_char in char:
+                    self.update_keys(keymap.convert(char), 0)
+                self.send_keys()
+            else:
+                self.update_keys(keymap.convert(char), 1)
+                self.send_keys()
+                self.update_keys(keymap.convert(char), 0)
+                self.send_keys()
+
+
 
         kb.custom_input()
 
