@@ -64,15 +64,15 @@ class Kbrd:
 
     def custom_input(self):
         """
-        Loop to check for keyboard events and send HID message
-        over D-Bus keyboard service when they happen
+        Take custom input, and send it
+        # TODO: need to deal with chords, etc
         """
         val = input("Enter your value: ")
         print('blasting...')
-        for char in val:
-            self.update_keys(keymap.convert("KEY_" + char), 1)
+        for char in string_to_keys(val):
+            self.update_keys(char, 1)
             self.send_keys()
-            self.update_keys(keymap.convert("KEY_" + char), 0)
+            self.update_keys(char, 0)
             self.send_keys()
 
         kb.custom_input()

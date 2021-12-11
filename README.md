@@ -49,8 +49,6 @@ Install dependencies
 ```
 
 ## Reconfigure the Bluetooth Daemon
-TODO: update this
-
 The instructions worked that were provided but things have moved on a little bit. To stop the Bluetooth daemon running then the following command is preferred:
 ```
 sudo service bluetooth stop
@@ -76,6 +74,12 @@ When a new service is created on the D-Bus, this service needs to be configured.
 sudo cp com.jonkeane.keypiservice.conf /etc/dbus-1/system.d
 ```
 
+## Install at a system level
+```
+pip install -e .
+sudo pip install -e .
+```
+
 ## Pairing
 
 ### Terminal 1
@@ -83,14 +87,7 @@ sudo cp com.jonkeane.keypiservice.conf /etc/dbus-1/system.d
 TODO: change this into a systemctl service
 
 ```
-pi@raspberrypi:~/keypi $ sudo /usr/libexec/bluetooth/bluetoothd --compat --noplugin=input,battery
-```
-
-### Terminal 2
-```
-pi@raspberrypi:~/keypi $ sudo service bluetooth stop
-pi@raspberrypi:~/keypi $ sudo /usr/lib/bluetooth/bluetoothd -P input &
-pi@raspberrypi:~/keypi $ sudo python3 keypi_server.py
+pi@raspberrypi:~/keypi $ sudo keypi server start
 Setting up service
 Setting up BT device
 Configuring for name KeyPi_Keyboard
@@ -105,12 +102,14 @@ Scan for the keyboard Pi and connect from main computer
 8C:2D:AA:44:0E:3A connected on the interrupt channel
 ```
 
-### Terminal 3
+### Terminal 2
 ```
-pi@raspberrypi:~/keypi $ python3 keypi_client.py
+pi@raspberrypi:~/keypi $ keypi input open
+pi@raspberrypi:~/keypi $ keypi input close
+pi@raspberrypi:~/keypi $ keypi input custom
 ```
 
-### Terminal 4
+### Terminal 3
 
 Only needed for the first time pairing, to accept the code and agree:
 
