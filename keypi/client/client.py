@@ -83,10 +83,6 @@ class Kbrd:
                 self.update_keys(keymap.convert(char), 0)
                 self.send_keys()
 
-
-
-        kb.custom_input()
-
     def space_space(self, sleep_time = 0.5):
         self.update_keys(keymap.convert("KEY_SPACE"), 1)
         self.send_keys()
