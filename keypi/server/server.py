@@ -12,6 +12,7 @@ import sys
 import dbus
 import dbus.service
 import socket
+import pkgutil
 
 
 from gi.repository import GLib
@@ -56,7 +57,7 @@ class BTKbDevice:
     """
     create a bluetooth device to emulate a HID keyboard
     """
-    MY_DEV_NAME = 'BT_HID_Keyboard'
+    MY_DEV_NAME = 'KeyPi_Keyboard'
     # Service port - must match port configured in SDP record
     P_CTRL = 17
     # Service port - must match port configured in SDP record#Interrrupt port
@@ -69,9 +70,8 @@ class BTKbDevice:
     DBUS_OM_IFACE = 'org.freedesktop.DBus.ObjectManager'
 
     # file path of the sdp record to laod
-    install_dir  = os.path.dirname(os.path.realpath(__file__))
-    SDP_RECORD_PATH = os.path.join(install_dir,
-                                   'sdp_record.xml')
+    # SDP_RECORD_PATH = pkgutil.get_data(__name__, "sdp_record.xml")
+
     # UUID for HID service (1124)
     # https://www.bluetooth.com/specifications/assigned-numbers/service-discovery
     UUID = '00001124-0000-1000-8000-00805f9b34fb'
@@ -214,11 +214,11 @@ class BTKbDevice:
         """
         print('Reading service record')
         try:
-            fh = open(BTKbDevice.SDP_RECORD_PATH, 'r')
+            sdp = pkgutil.get_data(__name__, "sdp_record.xml")
         except OSError:
             sys.exit('Could not open the sdp record. Exiting...')
 
-        return fh.read()
+        return sdp
 
     def listen(self):
         """
@@ -280,7 +280,7 @@ class KeyPiService(dbus.service.Object):
         self.device.send(cmd)
 
 
-if __name__ == '__main__':
+def start():
     # The sockets require root permission
     if not os.geteuid() == 0:
         sys.exit('Only root can run this script')

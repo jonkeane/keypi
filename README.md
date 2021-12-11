@@ -18,10 +18,36 @@ sudo apt-get upgrade
 sudo apt-get dist-upgrade
 ```
 
-Check that the packages required for this are installed
+Check that the packages required for this are installed, might also need `python3-gi` (or `pygobject3` on macos)
 ```
 sudo apt-get install python3-dbus
 ```
+
+On macos, might need to manually (only if there are errors about gi module not found):
+
+```
+brew install pygobject3
+PKG_CONFIG_PATH=/usr/local/opt/libffi/lib/pkgconfig ARCHFLAGS="-arch x86_64" pip install pygobject
+```
+
+## Installation, testing
+Create an env:
+```
+python3 -m venv keypi
+source keypi/bin/activate
+```
+
+Install dependencies
+```
+(keypi) $ pip install -r requirements.txt
+(keypi) $ pip install -r requirements-test.txt
+(keypi) $ pip install -e .
+```
+
+```
+(keypi) $ pytest -vv keypi
+```
+
 ## Reconfigure the Bluetooth Daemon
 TODO: update this
 
@@ -30,9 +56,9 @@ The instructions worked that were provided but things have moved on a little bit
 sudo service bluetooth stop
 ```
 
-The `input` Bluetooth plugin needs to be removed so that it does not grab the sockets we require access to. As the original author says the way this was documented could be improved. If you want to restart the daemon (without the input plugin) from the command line then the following would seem the preferred:
+The `input` and `battery` Bluetooth plugins need to be removed so that it does not grab the sockets we require access to. As the original author says the way this was documented could be improved. If you want to restart the daemon (without the input plugin) from the command line then the following would seem the preferred:
 ```
-sudo /usr/lib/bluetooth/bluetoothd -P input
+sudo /usr/lib/bluetooth/bluetoothd --noplugin=input,battery
 ```
 
 If you want to make this the default for this Raspberry Pi then modify the `/lib/systemd/system/bluetooth.service` file. You will need to change the Service line from:
@@ -41,7 +67,7 @@ ExecStart=/usr/lib/bluetooth/bluetoothd
 ```
 to
 ```
-ExecStart=/usr/lib/bluetooth/bluetoothd -P input
+ExecStart=/usr/lib/bluetooth/bluetoothd --compat --noplugin=input,battery
 ```
 
 ## Configure D-Bus
@@ -67,7 +93,7 @@ pi@raspberrypi:~/keypi $ sudo /usr/lib/bluetooth/bluetoothd -P input &
 pi@raspberrypi:~/keypi $ sudo python3 keypi_server.py
 Setting up service
 Setting up BT device
-Configuring for name BT_HID_Keyboard
+Configuring for name KeyPi_Keyboard
 Configuring Bluez Profile
 Reading service record
 Profile registered

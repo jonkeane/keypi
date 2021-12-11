@@ -1,5 +1,7 @@
 import dbus
-import keymap
+
+from . import keymap
+
 import argparse
 from time import sleep
 
@@ -58,7 +60,6 @@ class Kbrd:
         return [0xA1, 0x01, self.mod_keys, 0, *self.pressed_keys]
 
     def send_keys(self):
-        print(self.state)
         self.btk_service.send_keys(self.state)
 
     def custom_input(self):
@@ -99,17 +100,3 @@ class Kbrd:
         self.update_mod_keys(keymap.modkey("KEY_LEFTCTRL"), 0)
         self.update_keys(keymap.convert("KEY_Q"), 0)
         self.send_keys()
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("command", help="One of open|close|nothing")
-    args = parser.parse_args()
-
-    kb = Kbrd()
-
-    if args.command == "open":
-        kb.space_space()
-    elif args.command == "close":
-        kb.meta_ctrl_q()
-    else:
-        kb.custom_input()

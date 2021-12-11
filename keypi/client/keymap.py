@@ -12,7 +12,7 @@
 # Ported to a Python module by Liam Fraser.
 #
 
-keytable = {
+key_table = {
     "KEY_RESERVED": 0,
     "KEY_ESC": 41,
     "KEY_1": 30,
@@ -173,11 +173,11 @@ keytable = {
     "KEY_F21": 112,
     "KEY_F22": 113,
     "KEY_F23": 114,
-    "KEY_F24": 115
+    "KEY_F24": 115,
 }
 
 # Map modifier keys to array element in the bit array
-modkeys = {
+mod_keys = {
     "KEY_RIGHTMETA": 0,
     "KEY_RIGHTALT": 1,
     "KEY_RIGHTSHIFT": 2,
@@ -185,16 +185,77 @@ modkeys = {
     "KEY_LEFTMETA": 4,
     "KEY_LEFTALT": 5,
     "KEY_LEFTSHIFT": 6,
-    "KEY_LEFTCTRL": 7
+    "KEY_LEFTCTRL": 7,
 }
 
-
 def convert(evdev_keycode):
-    return keytable[evdev_keycode]
-
+    return key_table[evdev_keycode]
 
 def modkey(evdev_keycode):
-    if evdev_keycode in modkeys:
-        return modkeys[evdev_keycode]
+    if evdev_keycode in mod_keys:
+        return mod_keys[evdev_keycode]
     else:
         return -1  # Return an invalid array element
+
+
+def string_to_keys(string):
+    # split out mod keys surrounded by {}
+    string = string.upper()
+    # to allow things like {enter}, we add a | at the beginning to identify it
+    # as a "chord"
+    string = string.replace("{", "{|")
+    chars = string.split("{")
+    chars = [char.split("}") for char in chars]
+    chars = flatten(chars)
+
+    # chords
+    chars = [find_chords(char) for char in chars]
+    chars = flatten(chars)
+
+    return add_key(chars)
+
+def flatten(lst):
+    return [item for sublist in lst for item in sublist]
+
+def find_chords(char):
+    if "|" in char:
+        out = char.split("|")
+        while("" in out):
+            out.remove("")
+        # keep chords nested one deep so they stay together
+        return [out]
+    else:
+        return [sing for sing in char]
+
+def add_key(str_or_list):
+    if isinstance(str_or_list, list):
+        return [add_key(char) for char in str_or_list]
+    else:
+        return "KEY_" + swap_keys(str_or_list)
+
+swap_map = {
+    "META": "LEFTMETA",
+    "ALT": "LEFTALT",
+    "SHIFT": "LEFTSHIFT",
+    "CTRL": "LEFTCTRL",
+    "-": "MINUS",
+    "=": "EQUAL",
+    "\t": "TAB",
+    "[": "LEFTBRACE",
+    "]": "RIGHTBRACE",
+    ";": "SEMICOLON",
+    "'": "APOSTROPHE",
+    "`": "GRAVE",
+    "\\": "BACKSLASH",
+    ",": "COMMA",
+    ".": "DOT",
+    "/": "SLASH",
+    " ": "SPACE",
+    "DEL": "DELETE",
+}
+
+def swap_keys(key):
+    if key in swap_map.keys():
+        return swap_map[key]
+    else:
+        return key
