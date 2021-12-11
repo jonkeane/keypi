@@ -72,10 +72,10 @@ class Kbrd:
             if isinstance(char, list):
                 # this is a chord, so send all of those at once
                 for sub_char in char:
-                    self.update_keys(keymap.convert(char), 1)
+                    self.update_keys(keymap.convert(sub_char), 1)
                 self.send_keys()
                 for sub_char in char:
-                    self.update_keys(keymap.convert(char), 0)
+                    self.update_keys(keymap.convert(sub_char), 0)
                 self.send_keys()
             else:
                 self.update_keys(keymap.convert(char), 1)
