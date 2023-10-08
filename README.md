@@ -77,7 +77,15 @@ sudo cp com.jonkeane.keypiservice.conf /etc/dbus-1/system.d
 ## Install at a system level
 ```
 pip install -e .
-sudo pip install -e .
+```
+
+## KeyPi service
+Add the keypi service so that it runs on reboot. Note the path to the keypi executible must be set (use `which keypi` after pip installing to see where that is).
+```
+sudo cp keypi.service lib/systemd/system/keypi.service
+sudo systemctl daemon-reload
+sudo systemctl enable keypi.service
+sudo systemctl start keypi.service
 ```
 
 ## Pairing
@@ -111,8 +119,19 @@ pi@raspberrypi:~/keypi $ keypi input custom
 
 ### Terminal 3
 
-Only needed for the first time pairing, to accept the code and agree:
+Only needed for the first time pairing, to accept the code and agree. Running `trust {MAC ADDRESS}` will also help this in the future
 
 ```
 pi@raspberrypi:~/keypi $ sudo bluetoothctl
+```
+
+## A cron job to connect to the phone (in case it's dropped it's connection)
+
+Using this script (with the mac address filled in), check every so often and reconnect
+```
+mac={MAC ADDRESS}
+info=`bluetoothctl info $mac`
+if echo "$info" | grep -q "Connected: no"; then
+    bluetoothctl connect $mac
+fi
 ```
